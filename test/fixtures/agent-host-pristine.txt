@@ -1,0 +1,14 @@
+// Synthetic extract of VS Code 1.147 agentHostMain.js anchors.
+re.registerProvider(f.createInstance(Wk)),
+function vS(r){return r===ai||r===Ki||r===Ed}
+function tpt(r,i){if(r!==ai&&r!==Ki&&r!==Ed)return;}
+function restore(r){if(r.session.scheme===Ed&&r.storageResource.toString()===r.session.toString()){return 1}}
+let stores=new Map([[Ed,e.createInstance(iE)],[Ki,e.createInstance(oE)]])
+if(a&&["copilotcli","claude","codex"].includes(i.provider)||b)return;
+if(c||["copilotcli","claude","codex"].includes(i.provider)||d)return;
+function mI(r){switch(r){case"default":case"acceptEdits":case"bypassPermissions":case"plan":case"auto":return r;default:return}}
+async _fetchNativeModels(){let e={[Symbol.asyncIterator]:()=>({next:()=>new Promise(()=>{})})},t=QFe(),n=await this._sdkService.query({prompt:e,options:t});}
+function VFe(r,i){return[...jFe(r,Wse),...jFe(i,Bse)]}
+function jFe(r,i){return r.map(e=>({...e,id:Lbt(i,e.id),_meta:{...e._meta,...J0(i)}}))}
+function pick(r){let u;u=VFe(l,c);return u}
+function toModel(r,i,t){return{provider:i,id:r.value,name:r.displayName,supportsVision:!1,...t?{configSchema:t}:{}}}

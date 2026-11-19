@@ -1,0 +1,11 @@
+{
+  "name": "vscode-agent-harness-claude-sdk-shim",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Independent compatibility shim loaded through VS Code's VSCODE_AGENT_HOST_CLAUDE_SDK_ROOT hook.",
+  "type": "module",
+  "main": "./sdk.mjs",
+  "exports": {
+    ".": "./sdk.mjs"
+  }
+}

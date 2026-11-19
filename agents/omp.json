@@ -1,0 +1,42 @@
+{
+  "id": "omp",
+  "displayName": "OMP",
+  "description": "OMP agent (omp --mode rpc)",
+  "backend": "omp-rpc",
+  "icon": {
+    "codicon": "omp",
+    "svg": "%3Crect x='1.9' y='3.3' width='12.2' height='2.7'/%3E%3Crect x='3.6' y='6' width='2.4' height='3.1'/%3E%3Crect x='8.7' y='6' width='2.4' height='6.1'/%3E"
+  },
+  "permissionMode": {
+    "default": "default",
+    "autonomous": "default",
+    "options": [
+      {
+        "value": "default",
+        "label": "全部工具",
+        "description": "omp 默认工具集，按 omp 自身配置执行"
+      },
+      {
+        "value": "readOnly",
+        "label": "只读（read/grep/glob）",
+        "description": "仅允许读取类工具：read、grep、glob"
+      },
+      {
+        "value": "autoApprove",
+        "label": "自动批准所有工具",
+        "description": "工具调用不再询问（omp --auto-approve）"
+      },
+      {
+        "value": "noTools",
+        "label": "禁用所有工具",
+        "description": "不加载任何内置工具"
+      }
+    ]
+  },
+  "models": {
+    "catalog": "omp",
+    "prefix": "omp-",
+    "prefixInHost": true
+  },
+  "order": 2
+}

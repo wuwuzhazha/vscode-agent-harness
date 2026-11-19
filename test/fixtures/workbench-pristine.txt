@@ -1,0 +1,5 @@
+// Synthetic extract of VS Code 1.147 workbench.desktop.main.js anchors.
+function Wge(s,o){return o==="copilotcli"?d(18908,null):s.getVendors().find(t=>t.vendor===o)?.displayName??o.charAt(0).toUpperCase()+o.slice(1)}function GMt(s,o){return s.getVendors().find(e=>e.vendor===o)?.icon}function xgi(s,o){return 0}
+function oer(s){let o=TDs(s);return o.id===zUo.id?EDs:qu(o)}var Cit=ue("chatPhoneInputPresenter");
+registerChatSessionContribution({type:i,name:n,displayName:e.displayName,description:e.description,when:this._isLocalAgentHost&&!this._isSessionsWindow&&e.provider!=="copilotcli"?UL.negate().serialize():void 0,locations:e.provider==="copilotcli"?["panel","terminal"]:["panel"]})
+flags:requiresCustomModels:!0,supportsAutoModel:TKi(e.provider),requiresCopilotSignIn:()=>{let S=this._protectedResourcesService.getProtectedResources(e.provider);return S!==void 0?PMt(S):!0},onDidChangeRequiresCopilotSignIn:z.signal(

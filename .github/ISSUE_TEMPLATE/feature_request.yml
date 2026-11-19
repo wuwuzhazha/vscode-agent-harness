@@ -1,0 +1,44 @@
+name: Feature request
+description: Suggest a new agent, backend, platform or CLI capability
+title: "feat: "
+labels: ["enhancement"]
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of change?
+      options:
+        - New agent harness
+        - New backend for an existing agent
+        - Platform support (macOS / Linux)
+        - CLI or installer behavior
+        - Documentation
+    validations:
+      required: true
+  - type: input
+    id: agent
+    attributes:
+      label: Agent or capability
+      description: Name, CLI command, and a link to its documentation
+    validations:
+      required: true
+  - type: textarea
+    id: integration
+    attributes:
+      label: How does it integrate?
+      description: |
+        Does the CLI have a JSON-RPC/stream-json mode, an SDK, or only an interactive
+        TUI? How are models and permission modes selected?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: The agent can run headlessly (no interactive terminal required)
+          required: true

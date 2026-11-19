@@ -1,0 +1,48 @@
+{
+  "id": "zcode",
+  "displayName": "ZCode",
+  "description": "ZCode CLI (zcode --prompt)",
+  "backend": "zcode-cli",
+  "icon": {
+    "codicon": "zcode",
+    "svg": "%3Cpath d='M3.5 3.2H12.6L7.5 10.9H12.6V12.8H3.8L8.8 5.3H3.5Z'/%3E"
+  },
+  "permissionMode": {
+    "default": "edit",
+    "autonomous": "edit",
+    "options": [
+      {
+        "value": "edit",
+        "label": "Edit（默认，自动接受编辑与命令）",
+        "description": "ZCode --mode edit：自动接受文件编辑，Bash 可直接执行"
+      },
+      {
+        "value": "plan",
+        "label": "Plan（只读规划，不落盘）",
+        "description": "ZCode --mode plan：只分析与规划，不修改任何文件"
+      },
+      {
+        "value": "yolo",
+        "label": "YOLO（完全放行，不询问）",
+        "description": "ZCode --mode yolo：跳过所有权限询问"
+      }
+    ]
+  },
+  "models": {
+    "catalog": "magpie",
+    "prefix": "zcode-",
+    "prefixInHost": false
+  },
+  "terminal": {
+    "command": "zcode",
+    "searchGlobs": [
+      "%LOCALAPPDATA%/Programs/ZCode/resources/glm/zcode.cjs",
+      "%ProgramFiles%/ZCode/resources/glm/zcode.cjs"
+    ]
+  },
+  "notes": [
+    "ZCode CLI has no --model flag; model selection is applied through defaultModelSelection in ~/.zcode/v2/provider_config.json and restored after the turn starts.",
+    "--mode build/guarded need an interactive permission client and are unusable headless, so they are not exposed."
+  ],
+  "order": 3
+}

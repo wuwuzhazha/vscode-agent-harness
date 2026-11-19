@@ -1,0 +1,36 @@
+{
+  "id": "pi",
+  "displayName": "Pi",
+  "description": "Pi coding agent (pi --mode rpc)",
+  "backend": "pi-rpc",
+  "icon": {
+    "codicon": "pi",
+    "svg": "%3Cpath d='M2.6 4.9h10.8M5.4 4.9v6.2M10.6 4.9v6.2' fill='none' stroke='%23000' stroke-width='1.9' stroke-linecap='round'/%3E"
+  },
+  "permissionMode": {
+    "fallback": true,
+    "default": "default",
+    "autonomous": "default",
+    "options": [
+      {
+        "value": "default",
+        "label": "全部工具",
+        "description": "pi 默认工具集"
+      },
+      {
+        "value": "readOnly",
+        "label": "只读（read/grep/find/ls）",
+        "description": "仅允许读取类工具：read、grep、find、ls"
+      },
+      {
+        "value": "noTools",
+        "label": "禁用所有工具",
+        "description": "不加载任何内置工具"
+      }
+    ]
+  },
+  "models": {
+    "catalog": "pi"
+  },
+  "order": 1
+}

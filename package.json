@@ -1,0 +1,61 @@
+{
+  "name": "vscode-agent-harness",
+  "version": "1.0.0",
+  "description": "Install third-party coding agents (Pi, OMP, ZCode, ...) as native GitHub Copilot Chat harnesses in VS Code.",
+  "keywords": [
+    "vscode",
+    "copilot-chat",
+    "agent",
+    "harness",
+    "pi",
+    "omp",
+    "zcode",
+    "claude-agent-sdk"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "wuwuzhazha",
+    "url": "https://github.com/wuwuzhazha"
+  },
+  "type": "module",
+  "bin": {
+    "vscode-agent-harness": "bin/harness.mjs",
+    "vah": "bin/harness.mjs"
+  },
+  "engines": {
+    "node": ">=20.11"
+  },
+  "files": [
+    "bin",
+    "src",
+    "agents",
+    "shim",
+    "docs",
+    "AGENTS.md",
+    "README.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "CODE_OF_CONDUCT.md",
+    "DISCLAIMER.md",
+    "NOTICE.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "doctor": "node bin/harness.mjs doctor",
+    "list": "node bin/harness.mjs list",
+    "verify": "node bin/harness.mjs verify",
+    "test": "node --test test/",
+    "check": "node scripts/check.mjs",
+    "release:check": "node scripts/release-check.mjs",
+    "prepublishOnly": "npm test && npm run check && npm run release:check"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wuwuzhazha/vscode-agent-harness"
+  },
+  "bugs": {
+    "url": "https://github.com/wuwuzhazha/vscode-agent-harness/issues"
+  },
+  "homepage": "https://github.com/wuwuzhazha/vscode-agent-harness#readme"
+}

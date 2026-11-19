@@ -1,0 +1,73 @@
+name: Bug report
+description: Something does not install, verify, or run correctly
+title: "bug: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Please run the diagnostics below and redact personal
+        paths if necessary. Never paste API keys or tokens.
+  - type: input
+    id: vscode
+    attributes:
+      label: VS Code version and commit
+      description: Output of `code --version`
+      placeholder: "1.147.0\n8a14f0cc1b08d531eb83255ea3764ae22aa932b5\nx64"
+    validations:
+      required: true
+  - type: input
+    id: agent
+    attributes:
+      label: Agent and version
+      description: Pi, OMP or ZCode, plus `--version` output
+      placeholder: "zcode 0.17.1"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. vah install --agent zcode --yes
+        2. restart VS Code
+        3. open a chat session ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and logs
+      description: Include the error, and relevant `shim.log` lines.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: doctor
+    attributes:
+      label: "`vah doctor --json`"
+      render: json
+    validations:
+      required: true
+  - type: textarea
+    id: verify
+    attributes:
+      label: "`vah verify --json`"
+      render: json
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I restarted VS Code completely after installing
+          required: true
+        - label: I did not edit VS Code files or `product.json` manually
+          required: true
+        - label: I removed secrets and personal paths from the output
+          required: true

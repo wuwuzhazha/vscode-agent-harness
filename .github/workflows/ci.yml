@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Node ${{ matrix.node }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [20, 22]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Tests
+        run: npm test
+
+      - name: Repository checks
+        run: npm run check
+
+      - name: List agents
+        run: node bin/harness.mjs list
+
+      - name: Doctor (must explain a missing VS Code, not crash)
+        run: node bin/harness.mjs doctor --json
+        continue-on-error: true
