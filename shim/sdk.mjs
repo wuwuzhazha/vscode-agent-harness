@@ -38,33 +38,59 @@ export class AbortError extends Error {
   }
 }
 
+// npm installs command shims as .cmd on Windows; a bare PATH entry is not
+// executable there. Prefer .cmd/.exe and fall back to a .ps1 wrapper.
+function isFile(candidate) {
+  try {
+    return Boolean(candidate) && fs.statSync(candidate).isFile();
+  } catch {
+    return false;
+  }
+}
+
+function findOnPath(name) {
+  const win = process.platform === "win32";
+  const fileNames = win ? [`${name}.cmd`, `${name}.exe`, `${name}.ps1`, name] : [name];
+  const dirs = (process.env.PATH || "").split(path.delimiter);
+  for (const dir of dirs) {
+    if (!dir) continue;
+    for (const fileName of fileNames) {
+      const candidate = path.join(dir, fileName);
+      if (isFile(candidate)) return candidate;
+    }
+  }
+  return null;
+}
+
 function findOmp() {
   const home = os.homedir();
   const win = process.platform === "win32";
   const candidates = [
     process.env.OMP_BIN,
     path.join(home, "AppData", "Roaming", "npm", win ? "omp.cmd" : "omp"),
+    path.join(home, ".local", "bin", win ? "omp.cmd" : "omp"),
     path.join(home, ".local", "bin", "omp"),
-    path.join(home, ".bun", "bin", "omp"),
+    path.join(home, ".bun", "bin", win ? "omp.cmd" : "omp"),
   ];
   for (const candidate of candidates) {
-    if (candidate && fs.existsSync(candidate)) return candidate;
+    if (isFile(candidate)) return candidate;
   }
-  return win ? "omp.cmd" : "omp";
+  return findOnPath("omp") || (win ? "omp.cmd" : "omp");
 }
 
-function findPi(model) {
-  if (typeof model === "string" && model.startsWith("omp")) return findOmp();
+function findPi() {
   const home = os.homedir();
+  const win = process.platform === "win32";
   const candidates = [
     process.env.PI_BIN,
-    path.join(home, ".pi", "agent", "bin", process.platform === "win32" ? "pi.cmd" : "pi"),
+    path.join(home, ".pi", "agent", "bin", win ? "pi.cmd" : "pi"),
     path.join(home, ".pi", "agent", "bin", "pi"),
+    path.join(home, "AppData", "Roaming", "npm", win ? "pi.cmd" : "pi"),
   ];
   for (const candidate of candidates) {
-    if (candidate && fs.existsSync(candidate)) return candidate;
+    if (isFile(candidate)) return candidate;
   }
-  return null;
+  return findOnPath("pi");
 }
 
 const EFFORT_LEVELS = ["low", "medium", "high", "xhigh", "max"];
@@ -76,9 +102,10 @@ function runCapture(bin, args, timeoutMs = 30000) {
     let out = "";
     let child;
     try {
-      child = spawn(bin, args, {
+      const isPs1 = process.platform === "win32" && /\.ps1$/i.test(bin || "");
+      child = spawn(isPs1 ? "powershell.exe" : bin, isPs1 ? ["-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", bin, ...args] : args, {
         windowsHide: true,
-        shell: process.platform === "win32",
+        shell: !isPs1 && process.platform === "win32",
         stdio: ["ignore", "pipe", "pipe"],
       });
     } catch {
@@ -135,7 +162,8 @@ async function listHarnessModels(provider) {
   let models = [];
   try {
     if (provider === "omp") {
-      const out = await runCapture(findOmp(), ["models", "--json"]);
+      // `omp models` opens an interactive picker on 18.22.x and never exits.
+      const out = await runCapture(findOmp(), ["models", "ls", "--json", "--no-extensions"], 60000);
       if (out) models = parseOmpModels(out);
     } else {
       const out = await runCapture(findPi(), ["--list-models"]);
@@ -176,24 +204,27 @@ class PiRpc {
   }
 
   async start() {
-    const pi = findPi(this.model);
-    if (!pi) throw new Error("pi executable not found (set PI_BIN)");
+    // OMP selectors are provider/model (for example magpie/auto/...), so the
+    // host tag is the reliable discriminator; omp-* is only a legacy prefix.
+    const isOmp = this.env?.PI_HARNESS === "omp" || (typeof this.model === "string" && this.model.startsWith("omp"));
+    const pi = isOmp ? findOmp() : findPi();
+    if (!pi) throw new Error(`${isOmp ? "omp" : "pi"} executable not found (set ${isOmp ? "OMP_BIN" : "PI_BIN"})`);
     let model = this.model;
     if (typeof model === "string" && model.startsWith("omp-")) model = model.slice(4);
     const args = ["--mode", "rpc", "--no-session"];
-    if (model && model !== "pi-default" && model !== "default") args.push("--model", model);
+    if (model && model !== "pi-default" && model !== "omp-default" && model !== "default") args.push("--model", model);
     if (this.effort) args.push("--thinking", this.effort);
-    const isOmp = typeof this.model === "string" && this.model.startsWith("omp-");
     if (this.permissionMode === "readOnly") args.push("--tools", isOmp ? "read,grep,glob" : "read,grep,find,ls");
     else if (this.permissionMode === "noTools") args.push("--no-tools");
     else if (this.permissionMode === "autoApprove" && isOmp) args.push("--auto-approve");
     const editGate = path.join(SHIM_ROOT, "pi-edit-gate.ts");
     if (fs.existsSync(editGate)) args.push("--extension", editGate);
-    this.child = spawn(pi, args, {
+    const isPs1 = process.platform === "win32" && /\.ps1$/i.test(pi);
+    this.child = spawn(isPs1 ? "powershell.exe" : pi, isPs1 ? ["-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", pi, ...args] : args, {
       cwd: this.cwd,
       env: this.env,
       windowsHide: true,
-      shell: process.platform === "win32",
+      shell: !isPs1 && process.platform === "win32",
       stdio: ["pipe", "pipe", "pipe"],
     });
     log("spawned pi", { pid: this.child.pid, cwd: this.cwd, pi, model, effort: this.effort, permissionMode: this.permissionMode });

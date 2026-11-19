@@ -4,6 +4,21 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+
+- Pi model discovery now searches `PATH` and prefers Windows `.cmd` shims, so Pi
+  providers load the full model catalog instead of one fallback model.
+- OMP model discovery uses `omp models ls --json --no-extensions`, avoiding the
+  interactive `omp models` command that times out on OMP 18.22.x.
+- OMP RPC sessions are detected from `PI_HARNESS` and provider/model selectors,
+  so they use the OMP binary and auto-approve mode correctly.
+- The installer restores the built-in Claude provider after replacing the stock
+  registration, so Claude remains available alongside harness providers.
+- The VS Code 1.147.0 model-id anchor no longer consumes adjacent minified
+  functions such as `pRt` and `hRt`.
+
 ## [1.0.0] - 2026-11-19
 
 ### Added

@@ -5,6 +5,7 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { loadAgents } from "../src/agents.mjs";
 import { patchAgentHost, verifyAgentHost } from "../src/patch/agent-host.mjs";
+import { modelIdReturn } from "../src/patch/canonical.mjs";
 import { patchCss, verifyCss } from "../src/patch/css.mjs";
 import { patchWorkbench, verifyWorkbench } from "../src/patch/workbench.mjs";
 
@@ -19,10 +20,26 @@ test("agent host patch is complete and idempotent", () => {
   assert.deepEqual(verifyAgentHost(first.source, agents), []);
   assert.ok(first.source.includes('PI_HARNESS:this.id'));
   assert.ok(first.source.includes('r.session.scheme==="zcode"'));
+  assert.ok(first.source.includes("let cp=f.createInstance(Wk)"));
+  assert.ok(first.source.includes("re.registerProvider(cp)"));
 
   const second = patchAgentHost(first.source, agents);
   assert.deepEqual(second.applied, []);
   assert.equal(second.source, first.source);
+});
+
+test("model-id patch does not consume adjacent minified returns", () => {
+  const source = [
+    'function pRt(r,i){let e=r.capabilities?.supports;return{provider:i,id:r.id,name:r.name,supportsVision:!!e?.vision,...t?{configSchema:t}:{}}}',
+    'var gRt="default";function hRt(r){return r.value===gRt}',
+    'function fRt(r,i){let e=(r.supportedEffortLevels??[]).filter(Fse),t=qse(e);return{provider:i,id:r.value,name:r.displayName,supportsVision:!1,...t?{configSchema:t}:{}}}',
+  ].join("");
+  const result = patchAgentHost(source, agents);
+
+  assert.ok(result.source.includes("function pRt("));
+  assert.ok(result.source.includes("function hRt(r){return r.value===gRt}"));
+  assert.ok(result.source.includes(modelIdReturn(agents)));
+  assert.ok(!result.source.includes("id:r.value,name:r.displayName,supportsVision:!1"));
 });
 
 test("agent host patch also upgrades an older single-harness patch", () => {
