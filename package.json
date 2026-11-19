@@ -45,7 +45,7 @@
     "doctor": "node bin/harness.mjs doctor",
     "list": "node bin/harness.mjs list",
     "verify": "node bin/harness.mjs verify",
-    "test": "node --test test/",
+    "test": "node --test test/canonical.test.mjs test/checksums.test.mjs test/patch.test.mjs",
     "check": "node scripts/check.mjs",
     "release:check": "node scripts/release-check.mjs",
     "prepublishOnly": "npm test && npm run check && npm run release:check"
