@@ -1,6 +1,6 @@
 {
   "name": "vscode-agent-harness",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Install third-party coding agents (Pi, OMP, ZCode, ...) as native GitHub Copilot Chat harnesses in VS Code.",
   "keywords": [
     "vscode",
