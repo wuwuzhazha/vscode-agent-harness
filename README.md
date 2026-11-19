@@ -13,6 +13,8 @@ terminal glued to the side.
 > Anthropic, Pi, OMP or ZCode. This tool modifies your local VS Code installation. Read
 > [DISCLAIMER.md](DISCLAIMER.md) and [Safety](#safety-and-rollback) first.
 
+![vscode-agent-harness — native Pi, OMP and ZCode harnesses for VS Code Copilot Chat](docs/assets/cover.png)
+
 ## Supported agents
 
 | Agent | id | Backend | Models | Permission modes |
