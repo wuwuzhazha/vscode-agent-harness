@@ -137,7 +137,9 @@ function modelIdRule(agents) {
       if (source.includes(canonical)) return { source, matched: true, changed: false };
       return replaceMatch(
         source,
-        /return\{provider:i,id:[^\n]*?,supportsVision:!1,\.\.\.t\?\{configSchema:t\}:\{\}\}/,
+        // 1.147.0 also has a pRt return object on the same minified line.
+        // Match the exact fRt form so the rule cannot consume pRt and hRt.
+        /return\{provider:i,id:r\.value,name:r\.displayName,supportsVision:!1,\.\.\.t\?\{configSchema:t\}:\{\}\}/,
         canonical
       );
     },

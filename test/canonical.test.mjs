@@ -5,6 +5,7 @@ import {
   cssRules,
   mIFunction,
   modelIdReturn,
+  providerBlock,
   savedChatStore,
   schemeExpression,
   sessionIconChain,
@@ -64,6 +65,13 @@ test("only hosts that opt in prefix model ids", () => {
   assert.ok(source.includes('id:i==="omp"'));
   assert.ok(!source.includes('id:i==="zcode"'));
   assert.ok(source.includes('name:i==="omp"?"OMP · "'));
+});
+
+test("provider block restores the built-in Claude provider", () => {
+  const source = providerBlock(agents);
+  assert.ok(source.includes("let cp=f.createInstance(Wk)"));
+  assert.ok(source.includes("cp._sdkService=cs;re.registerProvider(cp)"));
+  assert.ok(source.includes('"@anthropic-ai","claude-agent-sdk","sdk.mjs"'));
 });
 
 test("vendor label knows the harness names", () => {

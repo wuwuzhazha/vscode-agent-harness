@@ -51,7 +51,17 @@ export function providerBlock(agents) {
     "if(c?.values){let w=e?.config?.permissionMode;c.values.permissionMode=spec.e.includes(w)?w:spec.e.includes(c.values.permissionMode)?c.values.permissionMode:spec.def}" +
     "return c};" +
     `p.getAutonomousSessionConfig=()=>({permissionMode:${autonomousExpression(agents)}});` +
-    "re.registerProvider(p)}})(),"
+    "re.registerProvider(p)}" +
+    // Restore the built-in Claude provider that the stock registration would
+    // have added. The harness clones share the shim SDK; Claude gets its own
+    // SDK service so it keeps using the official Claude Agent SDK cache.
+    "let cp=f.createInstance(Wk);" +
+    "let cs=new Ek(cp._logService,cp._agentSdkDownloader);" +
+    "cs._loadSdk=async function(i=!0){" +
+    'let t=se(s.userDataPath,"agent-host","sdk-cache","claude",o.agentSdks.claude.version,Nse(uh));' +
+    'let n=se(t,"node_modules","@anthropic-ai","claude-agent-sdk","sdk.mjs");' +
+    "return import(UFe(n).href)};" +
+    "cp._sdkService=cs;re.registerProvider(cp)})()" + ","
   );
 }
 
