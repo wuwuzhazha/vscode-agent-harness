@@ -34,5 +34,10 @@ jobs:
         run: node bin/harness.mjs list
 
       - name: Doctor (must explain a missing VS Code, not crash)
-        run: node bin/harness.mjs doctor --json
-        continue-on-error: true
+        run: node bin/harness.mjs doctor --json > doctor.json || true
+
+      - name: Doctor report
+        run: >-
+          node -e "const r=require('./doctor.json');
+          if(!r.problems||!r.problems.length){console.error('expected an actionable problem');process.exit(1)}
+          console.log(r.problems.join('\n'))"
